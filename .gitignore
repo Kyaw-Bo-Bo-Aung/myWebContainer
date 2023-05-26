@@ -1,0 +1,42 @@
+# Java Class Files
+*.class
+
+# Log file
+*.log
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+
+# Eclipse
+bin/
+tmp/
+build/
+target/
+.settings/
+.metadata
+.classpath
+.project
+.gradle
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.factorypath
+.recommenders
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# Maven
+target/
+/.mvn
+/.maven
+/.repository
+.flattened-pom.xml
+/.apt_generated/
+/.apt_generated_tests/
