@@ -55,7 +55,6 @@ public class SimpleWebContainer {
             return (HttpServlet) Class.forName(className).getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -64,10 +63,10 @@ public class SimpleWebContainer {
     public static void main(String[] args) throws IOException {
         SimpleWebContainer container = new SimpleWebContainer(8888, "config.properties");
         container.loadPropertiesFile();
-        container.handlers.forEach((url, httpServlet) -> {
-            System.out.println(url);
-            httpServlet.doGet();
-        });
+//        container.handlers.forEach((url, httpServlet) -> {
+//            System.out.println(url);
+//            httpServlet.doGet();
+//        });
         container.start();
     }
 }
