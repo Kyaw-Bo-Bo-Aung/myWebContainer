@@ -20,46 +20,49 @@ public class SocketHandler extends Thread{
     @Override
     public void run() {
             BufferedReader in = null;
-            PrintWriter out = null;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             
             Request request = new Request(in);
             
             if(!request.parse()) {
-                out = new PrintWriter(socket.getOutputStream());
-                String responseBody = "<html><body>Current Time: " + LocalDateTime.now() + "</body></html>";
+                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                String responseBody = "<html><body>Cannot process your request</body></html>";
 
-                out.println("HTTP/1.1 200 OK");
+                out.println("HTTP/1.1 500 Internal Server Error");
                 out.println("Content-Type: text/html");
                 out.println("Content-Length: " + responseBody.length());
                 out.println();
                 out.println(responseBody);
                 out.flush(); 
+            } else {
+                HttpServlet servlet = handlers.get(request.getPath());
+                if(servlet == null) {
+                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+                    String responseBody = "<html><body>Cannot process your request</body></html>";
+                    out.println("HTTP/1.1 404 Not Found");
+                    out.println("Content-Type: text/html");
+//                    out.println("Content-Length: " + responseBody.length());
+                    out.println();
+                    out.println(responseBody);
+                    out.flush();
+                } else {
+                    Response response = new Response(socket.getOutputStream());
+                    PrintWriter out = response.getPrintWriter();
+                    out.println("HTTP/1.1 200 OK");
+                    out.println("Content-Type: text/html");
+                    out.println("Content-Length: " +  100000);
+                    out.println();
+                    servlet.service(request, response);
+                    out.flush();
+                }
             }
             
-            System.out.println("METHODS => "+request.getMethod());
-            System.out.println("PATH => "+request.getPath());
-            request.getHeaders().forEach((String key, String value)-> {
-               System.out.println("HEADERS ... : " + key + ":" + value); 
-            });
-            request.getRequestParams().forEach((String key, String value)-> {
-                System.out.println("Request Params ... : " + key + ":" + value); 
-            });
-//            String line = in.readLine();
-//            
-//            while (!line.isEmpty()) {
-//                System.out.println(line);
-//                line = in.readLine();
-//            }
-            
-            
+                      
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if(in != null) in.close();
-                if(out != null) out.close();
                 if(socket != null) socket.close();
             } catch (Exception e2) {
                 e2.printStackTrace();

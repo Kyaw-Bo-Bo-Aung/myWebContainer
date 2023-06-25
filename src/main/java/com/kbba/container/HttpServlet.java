@@ -5,15 +5,19 @@ public abstract class HttpServlet {
         System.out.println("httpservlet init ......");
     }
     
-    public void service() {
-        // TODO - request and response object to create
+    public void service(Request request, Response response) {
+        if("GET".equals(request.getMethod())) {
+            doGet(request, response);
+        } else if ("POST".equals(request.getMethod())) {
+            doPost(request, response);
+        }
     }
     
-    public void doGet() {
-        System.out.println("httpservlet doget ......");
+    public void doGet(Request request, Response response) {
+        System.out.println("httpservlet default doGet() ......");
     }
     
-    public void doPost() {
-        System.out.println("httpservlet dopost ......");
+    public void doPost(Request request, Response response) {
+        System.out.println("httpservlet default doPost() ......");
     }
 }
